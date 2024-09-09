@@ -41,11 +41,11 @@
         // Vertex shader program
         const vsSource = `
             attribute vec4 aVertexPosition;
+            uniform mat4 uTranslationMatrix;
             varying vec2 posColor;
             void main(void) {
                 posColor = aVertexPosition.xy;
-                gl_PointSize = 5.0;
-                gl_Position = aVertexPosition;
+                gl_Position = uTranslationMatrix * aVertexPosition;
             }
         `;
 
@@ -76,8 +76,17 @@
         // objects we'll be drawing.
         const buffers = initBuffers(gl);
 
-        // Draw the scene
-        drawScene(gl, programInfo, buffers);
+        // Variables to track position and velocity
+        let squarePosition = [0.0, 0.0];
+        let squareVelocity = [0.01, 0.01];
+
+        // Start the animation loop
+        function animate() {
+            updatePosition();
+            drawScene(gl, programInfo, buffers);
+            requestAnimationFrame(animate);
+        }
+        animate();
 
         // Initialize the buffers we'll need. For this demo, we just
         // have one object -- a simple two-dimensional square.
@@ -105,6 +114,21 @@
             return {
                 position: positionBuffer,
             };
+        }
+
+        // Update the position of the square
+        function updatePosition() {
+            // Update position
+            squarePosition[0] += squareVelocity[0];
+            squarePosition[1] += squareVelocity[1];
+
+            // Check for boundary collisions and reverse velocity if needed
+            if (squarePosition[0] + 0.2 >= 1.0 || squarePosition[0] - 0.2 <= -1.0) {
+                squareVelocity[0] = -squareVelocity[0];
+            }
+            if (squarePosition[1] + 0.1 >= 1.0 || squarePosition[1] - 0.1 <= -1.0) {
+                squareVelocity[1] = -squareVelocity[1];
+            }
         }
 
         // Draw the scene.
@@ -142,7 +166,19 @@
             // Tell WebGL to use our program when drawing
             gl.useProgram(programInfo.program);
 
-            // Draw the lines
+            // Set the translation matrix
+            const translationMatrix = [
+                1.0, 0.0, 0.0, 0.0,
+                0.0, 1.0, 0.0, 0.0,
+                0.0, 0.0, 1.0, 0.0,
+                squarePosition[0], squarePosition[1], 0.0, 1.0,
+            ];
+
+            // Set the translation matrix uniform
+            const uTranslationMatrix = gl.getUniformLocation(programInfo.program, 'uTranslationMatrix');
+            gl.uniformMatrix4fv(uTranslationMatrix, false, translationMatrix);
+
+            // Draw the square
             {
                 const offset = 0;
                 const vertexCount = 4;

@@ -41,15 +41,20 @@
         // Vertex shader program
         const vsSource = `
             attribute vec4 aVertexPosition;
+            varying vec2 posColor;
             void main(void) {
+                posColor = aVertexPosition.xy;
+                gl_PointSize = 5.0;
                 gl_Position = aVertexPosition;
             }
         `;
 
         // Fragment shader program
         const fsSource = `
+            precision mediump float;
+            varying vec2 posColor;
             void main(void) {
-                gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0); // white color
+                gl_FragColor = vec4(posColor.x, posColor.y, 0.0, 1.0);
             }
         `;
 
@@ -141,7 +146,7 @@
             {
                 const offset = 0;
                 const vertexCount = 4;
-                gl.drawArrays(gl.LINE_LOOP, offset, vertexCount);
+                gl.drawArrays(gl.POINTS, offset, vertexCount);
             }
         }
 

@@ -79,6 +79,7 @@
                 attribLocations: {
                     vertexPosition: gl.getAttribLocation(shaderProgram, 'aVertexPosition'),
                     textureCoord: gl.getAttribLocation(shaderProgram, 'aTextureCoord'),
+                    vertexColor: gl.getAttribLocation(shaderProgram, 'aVertexColor'),
                 },
                 uniformLocations: {
                     uTranslationMatrix: gl.getUniformLocation(shaderProgram, 'uTranslationMatrix'),
@@ -118,6 +119,7 @@
                 const positionBuffer = gl.createBuffer();
                 const indexBuffer = gl.createBuffer();
                 const textureCoordBuffer = gl.createBuffer();
+                const colorBuffer = gl.createBuffer();
 
                 // Now create an array of positions for the square.
                 const positions = [
@@ -211,10 +213,29 @@
                 gl.bindBuffer(gl.ARRAY_BUFFER, textureCoordBuffer);
                 gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(textureCoordinates), gl.STATIC_DRAW);
 
+                const faceColors = [
+                    [1.0, 1.0, 1.0, 1.0],    // Front face: white
+                    [1.0, 0.0, 0.0, 1.0],    // Back face: red
+                    [0.0, 1.0, 0.0, 1.0],    // Top face: green
+                    [0.0, 0.0, 1.0, 1.0],    // Bottom face: blue
+                    [1.0, 1.0, 0.0, 1.0],    // Right face: yellow
+                    [1.0, 0.5, 0.0, 1.0],    // Left face: orange
+                ];
+
+                let colors = [];
+                for (let j = 0; j < faceColors.length; ++j) {
+                    const c = faceColors[j];
+                    colors = colors.concat(c, c, c, c);
+                }
+
+                gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
+                gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
+
                 return {
                     position: positionBuffer,
                     indices: indexBuffer,
                     textureCoord: textureCoordBuffer,
+                    color: colorBuffer,
                 };
             }
 
@@ -290,6 +311,25 @@
                         offset);
                     gl.enableVertexAttribArray(
                         programInfo.attribLocations.textureCoord);
+                }
+
+                // Tell WebGL how to pull out the colors from the color buffer into the vertexColor attribute.
+                {
+                    const numComponents = 4;
+                    const type = gl.FLOAT;
+                    const normalize = false;
+                    const stride = 0;
+                    const offset = 0;
+                    gl.bindBuffer(gl.ARRAY_BUFFER, buffers.color);
+                    gl.vertexAttribPointer(
+                        programInfo.attribLocations.vertexColor,
+                        numComponents,
+                        type,
+                        normalize,
+                        stride,
+                        offset);
+                    gl.enableVertexAttribArray(
+                        programInfo.attribLocations.vertexColor);
                 }
 
                 // Tell WebGL we want to affect texture unit 0

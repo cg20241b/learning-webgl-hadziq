@@ -89,6 +89,7 @@
                     projectionMatrix: gl.getUniformLocation(shaderProgram, 'uProjectionMatrix'),
                     viewMatrix: gl.getUniformLocation(shaderProgram, 'uViewMatrix'),
                     uSampler: gl.getUniformLocation(shaderProgram, 'uSampler'),
+                    ambientLight: gl.getUniformLocation(shaderProgram, 'uAmbientLight'),
                 },
             };
 
@@ -381,6 +382,9 @@
                 const viewMatrix = mat4.create();
                 mat4.translate(viewMatrix, viewMatrix, [0.0, 0.0, -6.0]);
                 gl.uniformMatrix4fv(programInfo.uniformLocations.viewMatrix, false, viewMatrix);
+
+                const ambientLight = [0.0, 1.0, 1.0];
+                gl.uniform3fv(programInfo.uniformLocations.ambientLight, ambientLight);
 
                 // Draw the cube
                 {

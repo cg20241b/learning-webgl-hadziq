@@ -91,8 +91,9 @@
                     viewMatrix: gl.getUniformLocation(shaderProgram, 'uViewMatrix'),
                     uSampler: gl.getUniformLocation(shaderProgram, 'uSampler'),
                     ambientLight: gl.getUniformLocation(shaderProgram, 'uAmbientLight'),
-                    directionalLightColor: gl.getUniformLocation(shaderProgram, 'uDirectionalLightColor'),
-                    directionalLightDirection: gl.getUniformLocation(shaderProgram, 'uDirectionalLightDirection'),
+                    diffuseLightColor: gl.getUniformLocation(shaderProgram, 'uDiffuseLightColor'),
+                    pointLightPosition: gl.getUniformLocation(shaderProgram, 'uPointLightPosition'),
+                    //directionalLightDirection: gl.getUniformLocation(shaderProgram, 'uDirectionalLightDirection'),
                 },
             };
 
@@ -453,10 +454,16 @@
                 gl.uniform3fv(programInfo.uniformLocations.ambientLight, ambientLight);
 
                 // Define the directional light properties
-                const directionalLightColor = [1.0, 1.0, 1.0]; // White light
-                const directionalLightDirection = [-1.0, 0.0, 0.0]; // Light coming from the front
-                gl.uniform3fv(programInfo.uniformLocations.directionalLightColor, directionalLightColor);
-                gl.uniform3fv(programInfo.uniformLocations.directionalLightDirection, directionalLightDirection);
+                //const diffuseLightColor = [1.0, 1.0, 1.0]; // White light
+                //const directionalLightDirection = [-1.0, 0.0, 0.0]; // Light coming from the front
+                //gl.uniform3fv(programInfo.uniformLocations.diffuseLightColor, diffuseLightColor);
+                //gl.uniform3fv(programInfo.uniformLocations.directionalLightDirection, directionalLightDirection);
+
+                // Define the point light properties
+                const diffuseLightColor = [1.0, 1.0, 1.0]; // White light
+                const pointLightPosition = [5.0, 5.0, 5.0]; // Light coming from the front
+                gl.uniform3fv(programInfo.uniformLocations.diffuseLightColor, diffuseLightColor);
+                gl.uniform3fv(programInfo.uniformLocations.pointLightPosition, pointLightPosition);
 
                 // Draw the cube
                 {

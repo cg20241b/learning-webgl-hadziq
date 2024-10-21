@@ -84,12 +84,12 @@
                     vertexNormal: gl.getAttribLocation(shaderProgram, 'aVertexNormal'),
                 },
                 uniformLocations: {
-                    uTranslationMatrix: gl.getUniformLocation(shaderProgram, 'uTranslationMatrix'),
-                    uZRotationMatrix: gl.getUniformLocation(shaderProgram, 'uZRotationMatrix'),
-                    uYRotationMatrix: gl.getUniformLocation(shaderProgram, 'uYRotationMatrix'),
+                    translationMatrix: gl.getUniformLocation(shaderProgram, 'uTranslationMatrix'),
+                    zRotationMatrix: gl.getUniformLocation(shaderProgram, 'uZRotationMatrix'),
+                    yRotationMatrix: gl.getUniformLocation(shaderProgram, 'uYRotationMatrix'),
                     projectionMatrix: gl.getUniformLocation(shaderProgram, 'uProjectionMatrix'),
                     viewMatrix: gl.getUniformLocation(shaderProgram, 'uViewMatrix'),
-                    uSampler: gl.getUniformLocation(shaderProgram, 'uSampler'),
+                    sampler: gl.getUniformLocation(shaderProgram, 'uSampler'),
                     ambientLight: gl.getUniformLocation(shaderProgram, 'uAmbientLight'),
                     diffuseLightColor: gl.getUniformLocation(shaderProgram, 'uDiffuseLightColor'),
                     pointLightPosition: gl.getUniformLocation(shaderProgram, 'uPointLightPosition'),
@@ -408,7 +408,7 @@
                 gl.bindTexture(gl.TEXTURE_2D, texture);
 
                 // Tell the shader we bound the texture to texture unit 0
-                //gl.uniform1i(programInfo.uniformLocations.uSampler, 0);
+                //gl.uniform1i(programInfo.uniformLocations.sampler, 0);
 
                 // Tell WebGL to use our program when drawing
                 gl.useProgram(programInfo.program);
@@ -434,9 +434,9 @@
                 ];
 
                 // Set the translation matrix uniform
-                gl.uniformMatrix4fv(programInfo.uniformLocations.uTranslationMatrix, false, translationMatrix);
-                gl.uniformMatrix4fv(programInfo.uniformLocations.uZRotationMatrix, false, zRotationMatrix);
-                gl.uniformMatrix4fv(programInfo.uniformLocations.uYRotationMatrix, false, yRotationMatrix);
+                gl.uniformMatrix4fv(programInfo.uniformLocations.translationMatrix, false, translationMatrix);
+                gl.uniformMatrix4fv(programInfo.uniformLocations.zRotationMatrix, false, zRotationMatrix);
+                gl.uniformMatrix4fv(programInfo.uniformLocations.yRotationMatrix, false, yRotationMatrix);
 
                 const fieldOfView = 45 * Math.PI / 180;   // in radians
                 const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
